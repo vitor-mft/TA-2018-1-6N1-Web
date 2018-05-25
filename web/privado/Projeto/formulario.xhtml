@@ -63,7 +63,7 @@
                             <p:outputLabel value="Edição de Colaboradores"/>
                         </f:facet> 
                         <p:outputLabel value="Colaboradores" for="selectColaborador"/>
-                        <p:selectOneMenu value="#{controleProjeto.colaborador}"
+                        <p:selectOneMenu value="#{controleProjeto.colaborador.usuario}"
                                          id="selectColaborador" filter="true" filterMatchMode="startsWith">
                             <f:converter converterId="converterUsuario"/>
                             <f:selectItem noSelectionOption="true"
@@ -72,7 +72,7 @@
                                            var="p" itemLabel="#{p.nome}"/>
                         </p:selectOneMenu>
                         <p:outputLabel value="Carga Horaria" for="txtCargaH"/>
-                        <p:inputText value="#{controleProjeto.daoColaborador}"
+                        <p:inputText value="#{controleProjeto.colaborador.cargaHoraria}"
                                      id="txtCargaH" size="15" maxlength="10"/>
                         <p:outputLabel for="Gestor" value="Gertor" />
                         <p:selectOneRadio id="Gestor" value="#{controleProjeto.colaborador.gestor}">
