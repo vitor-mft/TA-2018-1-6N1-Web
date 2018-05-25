@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="formEdicao">
+        <h:panelGroup rendered="#{controleProjeto.editando}">
+            <div class="ui-fluid">
+                <p:messages id="messages"/>
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-2, ui-grid-col-20"
+                             layout="grid" styleClass="ui-panelgrid-blank">
+                    <f:facet name="header">
+                        <p:outputLabel value="Edição de Projetos"/>
+                    </f:facet>
+                    <p:outputLabel value="ID"/>
+                    <p:inputText value="#{controleProjeto.objeto.id}"
+                                 size="5" readonly="true"/>
+                    <p:outputLabel value="Nome" for="txtNome"/>
+                    <p:inputText value="#{controleProjeto.objeto.nome}"
+                                 id="txtNome" size="50" maxlength="40"/>
+                    <p:outputLabel value="Descrição" for="txtDescricao"/>
+                    <p:inputText value="#{controleProjeto.objeto.descricao}"
+                                 id="txtDescricao" size="50" maxlength="40"/>
+
+                    <p:outputLabel value="Data de Inicio" for="txtInicio"/>
+                    <p:calendar value="#{controleProjeto.objeto.inicio}"
+                                id="txtInicio" 
+                                mask="true" pattern="dd/MM/yyyy" navigator="true">
+                        <f:converter converterId="converterCalendar"/>
+                    </p:calendar>
+                    <p:outputLabel value="Data de Fim" for="txtFim"/>
+                    <p:calendar value="#{controleProjeto.objeto.fim}"
+                                id="txtFim" 
+                                mask="true" pattern="dd/MM/yyyy" navigator="true">
+                        <f:converter converterId="converterCalendar"/>
+                    </p:calendar>
+
+                    <p:outputLabel for="Situacao" value="Situação:" />
+                    <p:selectOneRadio id="Situacao" value="#{controleProjeto.objeto.ativo}">
+                        <f:selectItem itemLabel="Ativo" itemValue="true" />
+                        <f:selectItem itemLabel="Desativado" itemValue="false" />
+                    </p:selectOneRadio>
+
+                    <p:outputLabel value="Setor" for="SelectSetor"/>
+                    <p:selectOneMenu value="#{controleProjeto.objeto.setor}"
+                                     id="SelectSetor" filter="true" filterMatchMode="startsWith">
+                        <f:converter converterId="converterSetor"/>
+                        <f:selectItem itemLabel="Selecione um Registro"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{controleProjeto.daoSetor.listaTodos}"
+                                       var="s" itemLabel="#{s.nome}"/>
+                    </p:selectOneMenu> 
+                    <p:commandButton value="Salvar"
+                                     icon="ui-icon-disk"
+                                     actionListener="#{controleProjeto.salvar()}"
+                                     update="formEdicao :formListagem"/>                                    
+                </p:panelGrid>
+                <h:panelGroup id="painelColaboradores">
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2, ui-grid-col-20"
+                                 layout="grid" styleClass="ui-panelgrid-blank" rendered="#{controleProjeto.editandoColaborador}">
+                        <f:facet name="header">
+                            <p:outputLabel value="Edição de Colaboradores"/>
+                        </f:facet> 
+                        <p:outputLabel value="Colaboradores" for="selectColaborador"/>
+                        <p:selectOneMenu value="#{controleProjeto.colaborador}"
+                                         id="selectColaborador" filter="true" filterMatchMode="startsWith">
+                            <f:converter converterId="converterUsuario"/>
+                            <f:selectItem noSelectionOption="true"
+                                          itemLabel="Selecione um Registro"/>
+                            <f:selectItems value="#{controleProjeto.daoUsuario.listaTodos}"
+                                           var="p" itemLabel="#{p.nome}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Carga Horaria" for="txtCargaH"/>
+                        <p:inputText value="#{controleProjeto.daoColaborador}"
+                                     id="txtCargaH" size="15" maxlength="10"/>
+                        <p:outputLabel for="Gestor" value="Gertor" />
+                        <p:selectOneRadio id="Gestor" value="#{controleProjeto.colaborador.gestor}">
+                            <f:selectItem itemLabel="Sim" itemValue="true" />
+                            <f:selectItem itemLabel="Nao" itemValue="false" />
+                        </p:selectOneRadio>
+
+                        <p:commandButton value="Salvar Colaborador" icon="ui-icon-disk"
+                                         actionListener="#{controleProjeto.salvarColaborador()}"
+                                         id="btnAdicionarColaborador"
+                                         process=" btnAdicionarColaborador selectColaborador"
+                                         update="messages painelColaboradores listagemColaborador"/>
+                    </p:panelGrid>
+                </h:panelGroup>
+
+            </div>
+            <h:panelGroup id="listagemColaborador">
+                <h:panelGroup rendered="#{!controleProjeto.editandoColaborador}">
+                    <p:commandButton value="Incluir Colaborador" actionListener="#{controleProjeto.novoColaborador()}"
+                                     update="listagemColaborador painelColaboradores"
+                                     process="@this"/>
+                    <p:dataTable value="#{controleProjeto.objeto.colaboradores}" var="per" reflow="true">
+                        <f:facet name="header">
+                            <p:outputLabel value="Lista de Colaboradores"/>
+                        </f:facet>
+                        <p:column headerText="Nome">
+                            <p:outputLabel value="#{per.usuario.nome}"/>
+                        </p:column>
+                        <p:column headerText="Carga Horaria">
+                            <p:outputLabel value="#{per.cargaHoraria}"/>
+                        </p:column>
+                        <p:column headerText="Gestor">
+                            <p:outputLabel value="#{per.gestor}"/>
+                        </p:column>
+                        <p:column headerText="Ações">
+                            <div align="center">
+                                <p:commandButton icon="ui-icon-trash"
+                                                 actionListener="#{controleProjeto.removerColaborador(per)}"
+                                                 process="@this" update="@form"/>
+                            </div>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:panelGroup>
+    </h:form>
+</html>
+
