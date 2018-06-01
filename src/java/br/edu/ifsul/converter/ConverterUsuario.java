@@ -5,7 +5,6 @@
  */
 package br.edu.ifsul.converter;
 
-import br.edu.ifsul.modelo.Setor;
 import br.edu.ifsul.modelo.Usuario;
 import java.io.Serializable;
 import javax.faces.component.UIComponent;
@@ -30,7 +29,8 @@ public class ConverterUsuario implements Serializable, Converter{
        if ( string == null || string.equals("Selecione um Registro")){
            return null;
        }
-        return em.find(Setor.class,Integer.parseInt(string));
+        return em.find(Usuario.class,Integer.parseInt(string));
+        
     }
 
     //aqui so vai precisar retornar o ID

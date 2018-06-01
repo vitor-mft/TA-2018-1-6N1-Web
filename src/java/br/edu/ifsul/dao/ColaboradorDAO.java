@@ -16,7 +16,7 @@ public class ColaboradorDAO<TIPO> extends DAOGenerico<Colaborador> implements Se
     public ColaboradorDAO(){
         super();
         classePersistente = Colaborador.class;
-        ordem = "nome";
+        ordem = "id";
         maximoObjetos = 2;
     }
 }
