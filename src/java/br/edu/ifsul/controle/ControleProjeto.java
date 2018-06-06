@@ -104,7 +104,8 @@ public class ControleProjeto implements Serializable {
         if (objeto.getColaboradores().contains(colaborador)) {
             Util.mensagemErro("Colaborador Já faz parte deste Projeto");
         } else {
-            objeto.getColaboradores().add(colaborador);
+          // objeto.getColaboradores().add(colaborador);
+            objeto.adicionarColaborador(colaborador);
             Util.mensagemInformacao("Colaborador Incluido com Sucesso");
         }
         editandoColaborador = false;
